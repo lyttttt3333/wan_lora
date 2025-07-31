@@ -393,9 +393,6 @@ class ModelLogger:
             }
             torch.save(checkpoint, path)
 
-if accelerator.is_main_process:
-    torch.save(checkpoint, 'checkpoint.pth')
-
 
 
 def launch_training_task(
