@@ -4,6 +4,8 @@ from PIL import Image
 import pandas as pd
 from tqdm import tqdm
 from accelerate import Accelerator
+import os
+import wandb
 
 
 
@@ -358,14 +360,23 @@ class ModelLogger:
         self.output_path = output_path
         self.remove_prefix_in_ckpt = remove_prefix_in_ckpt
         self.state_dict_converter = state_dict_converter
-        
-    
-    def on_step_end(self, loss):
-        pass
+        self.use_wandb = use_wandb
+
+        self.wandb_initialized = False
+
+    def init_wandb(self, accelerator):
+        if accelerator.is_main_process and not self.wandb_initialized:
+            wandb.init(project="wan2.2_finetune")  # 可加其他参数如 name=run_name, config=config
+            self.wandb_initialized = True
+
+    def on_step_end(self, accelerator, loss, global_step):
+        if accelerator.is_main_process:
+            self.init_wandb(accelerator)
+            wandb.log({"train/loss": loss.item()}, step=global_step)
+
     
     
     def on_epoch_end(self, accelerator, model, epoch_id, steps):
-        accelerator.wait_for_everyone()
         if accelerator.is_main_process:
             state_dict = accelerator.get_state_dict(model)
             state_dict = accelerator.unwrap_model(model).export_trainable_state_dict(state_dict, remove_prefix=self.remove_prefix_in_ckpt)
@@ -392,8 +403,6 @@ def launch_training_task(
     global_steps = 0
     for epoch_id in range(num_epochs):
         for data in tqdm(dataloader):
-            if accelerator.is_local_main_process:
-                global_steps += 1
             with accelerator.accumulate(model):
                 optimizer.zero_grad()
                 loss = model(data)
@@ -401,8 +410,13 @@ def launch_training_task(
                 optimizer.step()
                 model_logger.on_step_end(loss)
                 scheduler.step()
-            if accelerator.is_local_main_process and global_steps % save_steps == 0:
+            if accelerator.is_main_process:
+                global_steps += 1
+                model_logger.on_step_end(accelerator, loss, global_steps)
+            if global_steps % save_steps == 0:
+                accelerator.wait_for_everyone()
                 model_logger.on_epoch_end(accelerator, model, epoch_id, global_steps)
+                accelerator.wait_for_everyone()
 
 
 
