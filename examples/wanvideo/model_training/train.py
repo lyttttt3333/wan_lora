@@ -129,7 +129,8 @@ if __name__ == "__main__":
     )
     model_logger = ModelLogger(
         args.output_path,
-        remove_prefix_in_ckpt=args.remove_prefix_in_ckpt
+        remove_prefix_in_ckpt=args.remove_prefix_in_ckpt,
+        use_wandb=True,
     )
     optimizer = torch.optim.AdamW(model.trainable_modules(), lr=args.learning_rate)
     scheduler = torch.optim.lr_scheduler.ConstantLR(optimizer)
