@@ -421,13 +421,8 @@ def launch_training_task(
                 global_steps += 1
                 # model_logger.on_step_end(accelerator, loss, global_steps)
             if global_steps % save_steps == 0:
-                print("wait")
                 accelerator.wait_for_everyone()
-                print("wait1")
                 model_logger.on_epoch_end(accelerator, model, optimizer, scheduler, epoch_id, global_steps)
-                print("wait2")
-                accelerator.wait_for_everyone()
-                print("wait3")
 
 
 
