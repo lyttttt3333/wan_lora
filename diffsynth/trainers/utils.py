@@ -383,15 +383,15 @@ class ModelLogger:
             state_dict = self.state_dict_converter(state_dict)
             os.makedirs(self.output_path, exist_ok=True)
             path = os.path.join(self.output_path, f"epoch-{epoch_id}-{steps}.pth")
-            # accelerator.save(state_dict, path, safe_serialization=True)
-            checkpoint = {
-                'epoch': epoch_id,
-                'step': steps,
-                'model_state_dict': state_dict,
-                'optimizer_state_dict': optimizer.state_dict(),
-                'scheduler_state_dict': scheduler.state_dict(),
-            }
-            torch.save(checkpoint, path)
+            accelerator.save(state_dict, path, safe_serialization=True)
+            # checkpoint = {
+            #     'epoch': epoch_id,
+            #     'step': steps,
+            #     'model_state_dict': state_dict,
+            #     'optimizer_state_dict': optimizer.state_dict(),
+            #     'scheduler_state_dict': scheduler.state_dict(),
+            # }
+            # torch.save(checkpoint, path)
 
 
 
