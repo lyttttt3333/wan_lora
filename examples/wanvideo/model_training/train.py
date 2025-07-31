@@ -136,6 +136,7 @@ if __name__ == "__main__":
         extra_inputs=args.extra_inputs,
         max_timestep_boundary=args.max_timestep_boundary,
         min_timestep_boundary=args.min_timestep_boundary,
+        resume_apth=args.resume_path,
     )
     model_logger = ModelLogger(
         args.output_path,
