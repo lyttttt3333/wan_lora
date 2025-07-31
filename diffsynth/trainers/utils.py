@@ -376,14 +376,25 @@ class ModelLogger:
 
     
     
-    def on_epoch_end(self, accelerator, model, epoch_id, steps):
+    def on_epoch_end(self, accelerator, optimizer, scheduler, model, epoch_id, steps):
         if accelerator.is_main_process:
             state_dict = accelerator.get_state_dict(model)
             state_dict = accelerator.unwrap_model(model).export_trainable_state_dict(state_dict, remove_prefix=self.remove_prefix_in_ckpt)
             state_dict = self.state_dict_converter(state_dict)
             os.makedirs(self.output_path, exist_ok=True)
-            path = os.path.join(self.output_path, f"epoch-{epoch_id}-{steps}.safetensors")
-            accelerator.save(state_dict, path, safe_serialization=True)
+            path = os.path.join(self.output_path, f"epoch-{epoch_id}-{steps}.pth")
+            # accelerator.save(state_dict, path, safe_serialization=True)
+            checkpoint = {
+                'epoch': epoch_id,
+                'step': steps,
+                'model_state_dict': state_dict,
+                'optimizer_state_dict': optimizer.state_dict(),
+                'scheduler_state_dict': scheduler.state_dict(),
+            }
+            torch.save(checkpoint, path)
+
+if accelerator.is_main_process:
+    torch.save(checkpoint, 'checkpoint.pth')
 
 
 
@@ -414,7 +425,7 @@ def launch_training_task(
                 model_logger.on_step_end(accelerator, loss, global_steps)
             if global_steps % save_steps == 0:
                 accelerator.wait_for_everyone()
-                model_logger.on_epoch_end(accelerator, model, epoch_id, global_steps)
+                model_logger.on_epoch_end(accelerator, model, optimizer, scheduler, epoch_id, global_steps)
                 accelerator.wait_for_everyone()
 
 
