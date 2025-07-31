@@ -2,6 +2,7 @@ import torch, os, json
 from diffsynth.pipelines.wan_video_new import WanVideoPipeline, ModelConfig
 from diffsynth.trainers.utils import DiffusionTrainingModule, VideoDataset, ModelLogger, launch_training_task, wan_parser
 from peft import PeftModel, PeftConfig
+from peft import LoraConfig, get_peft_model
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 
@@ -45,8 +46,8 @@ class WanTrainingModule(DiffusionTrainingModule):
                 #     lora_rank=lora_rank
                 # )
                 lora_config = LoraConfig(
-                    r=16,
-                    lora_alpha=16,
+                    r=lora_rank,
+                    lora_alpha=lora_rank,
                     target_modules=lora_target_modules.split(","),  # 根据你模型命名来填
                     task_type="CUSTOM"
                 )
@@ -54,8 +55,8 @@ class WanTrainingModule(DiffusionTrainingModule):
                 model = get_peft_model(base_model, lora_config)
             else: 
                 lora_config = LoraConfig(
-                    r=16,
-                    lora_alpha=16,
+                    r=lora_rank,
+                    lora_alpha=lora_rank,
                     target_modules=lora_target_modules.split(","),  # 根据你模型命名来填
                     task_type="CUSTOM"
                 )
