@@ -49,7 +49,7 @@ class WanTrainingModule(DiffusionTrainingModule):
                     r=lora_rank,
                     lora_alpha=lora_rank,
                     target_modules=lora_target_modules.split(","),  # 根据你模型命名来填
-                    task_type="CUSTOM"
+                    task_type="FEATURE_EXTRACTION"
                 )
                 base_model = getattr(self.pipe, lora_base_model)
                 model = get_peft_model(base_model, lora_config)
@@ -58,7 +58,7 @@ class WanTrainingModule(DiffusionTrainingModule):
                     r=lora_rank,
                     lora_alpha=lora_rank,
                     target_modules=lora_target_modules.split(","),  # 根据你模型命名来填
-                    task_type="CUSTOM"
+                    task_type="FEATURE_EXTRACTION"
                 )
                 base_model = getattr(self.pipe, lora_base_model)
                 model = PeftModel.from_pretrained(base_model, resume_path)
