@@ -14,4 +14,4 @@ accelerate launch examples/wanvideo/model_training/train.py \
   --lora_target_modules "q,k,v,o,ffn.0,ffn.2" \
   --lora_rank 32 \
   --extra_inputs "input_image" \
-  --resume_path ""
+  --resume_path "models/train/Wan2.2-TI2V-5B_lora/epoch-0-600.safetensors"

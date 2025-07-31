@@ -1,3 +1,5 @@
+export WANDB_API_KEY="5409d3b960b01b25cec0f6abb5361b4022f0cc41"
+
 accelerate launch examples/wanvideo/model_training/train.py \
   --dataset_base_path data/drones \
   --dataset_metadata_path data/drones/meta.csv \

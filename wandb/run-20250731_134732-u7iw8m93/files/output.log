@@ -1,2 +1,60 @@
 VAE encoding: 100%|██████████| 1/1 [00:00<00:00,  5.51it/s]
- 64%|██████▍   | 32/50 [00:47<00:13,  1.35it/s]
+100%|██████████| 50/50 [01:00<00:00,  1.22s/it]
+VAE decoding: 100%|██████████| 1/1 [00:02<00:00,  2.55s/it]
+Saving video: 100%|██████████| 49/49 [00:01<00:00, 46.87it/s]
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+VAE encoding: 100%|██████████| 1/1 [00:00<00:00, 43.26it/s]
+100%|██████████| 50/50 [01:00<00:00,  1.21s/it]
+VAE decoding: 100%|██████████| 1/1 [00:02<00:00,  2.46s/it]
+Saving video: 100%|██████████| 49/49 [00:01<00:00, 42.62it/s]
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+VAE encoding: 100%|██████████| 1/1 [00:00<00:00, 35.27it/s]
+100%|██████████| 50/50 [00:50<00:00,  1.01s/it]
+VAE decoding: 100%|██████████| 1/1 [00:02<00:00,  2.46s/it]
+Saving video: 100%|██████████| 49/49 [00:01<00:00, 48.90it/s]
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+VAE encoding: 100%|██████████| 1/1 [00:00<00:00,  1.70it/s]
+100%|██████████| 50/50 [00:55<00:00,  1.11s/it]
+VAE decoding: 100%|██████████| 1/1 [00:02<00:00,  2.47s/it]
+Saving video: 100%|██████████| 49/49 [00:01<00:00, 48.60it/s]
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+VAE encoding: 100%|██████████| 1/1 [00:02<00:00,  2.75s/it]
+100%|██████████| 50/50 [00:56<00:00,  1.14s/it]
+VAE decoding: 100%|██████████| 1/1 [00:03<00:00,  3.24s/it]
+Saving video: 100%|██████████| 49/49 [00:01<00:00, 48.30it/s]
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+VAE encoding: 100%|██████████| 1/1 [00:00<00:00, 43.09it/s]
+100%|██████████| 50/50 [00:57<00:00,  1.14s/it]
+VAE decoding: 100%|██████████| 1/1 [00:02<00:00,  2.55s/it]
+Saving video: 100%|██████████| 49/49 [00:01<00:00, 47.68it/s]
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+VAE encoding: 100%|██████████| 1/1 [00:00<00:00, 32.27it/s]
+100%|██████████| 50/50 [00:56<00:00,  1.14s/it]
+VAE decoding: 100%|██████████| 1/1 [00:02<00:00,  2.53s/it]
+Saving video: 100%|██████████| 49/49 [00:01<00:00, 40.09it/s]
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+VAE encoding: 100%|██████████| 1/1 [00:00<00:00, 42.87it/s]
+100%|██████████| 50/50 [01:00<00:00,  1.20s/it]
+VAE decoding: 100%|██████████| 1/1 [00:02<00:00,  2.52s/it]
+Saving video: 100%|██████████| 49/49 [00:01<00:00, 48.39it/s]
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+VAE encoding: 100%|██████████| 1/1 [00:01<00:00,  1.84s/it]
+100%|██████████| 50/50 [00:53<00:00,  1.08s/it]
+VAE decoding: 100%|██████████| 1/1 [00:02<00:00,  2.95s/it]
+Saving video: 100%|██████████| 49/49 [00:01<00:00, 48.07it/s]
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+VAE encoding: 100%|██████████| 1/1 [00:01<00:00,  1.11s/it]
+100%|██████████| 50/50 [00:56<00:00,  1.13s/it]
+VAE decoding: 100%|██████████| 1/1 [00:02<00:00,  2.53s/it]
+Saving video: 100%|██████████| 49/49 [00:01<00:00, 41.11it/s]
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
+wandb: WARNING `fps` argument does not affect the frame rate of the video when providing a file path or raw bytes.
