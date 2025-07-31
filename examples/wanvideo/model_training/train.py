@@ -1,6 +1,7 @@
 import torch, os, json
 from diffsynth.pipelines.wan_video_new import WanVideoPipeline, ModelConfig
 from diffsynth.trainers.utils import DiffusionTrainingModule, VideoDataset, ModelLogger, launch_training_task, wan_parser
+from peft import PeftModel, PeftConfig
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 
@@ -16,6 +17,7 @@ class WanTrainingModule(DiffusionTrainingModule):
         extra_inputs=None,
         max_timestep_boundary=1.0,
         min_timestep_boundary=0.0,
+        resume_path=None,
     ):
         super().__init__()
         # Load models
@@ -36,11 +38,19 @@ class WanTrainingModule(DiffusionTrainingModule):
         
         # Add LoRA to the base models
         if lora_base_model is not None:
-            model = self.add_lora_to_model(
-                getattr(self.pipe, lora_base_model),
-                target_modules=lora_target_modules.split(","),
-                lora_rank=lora_rank
-            )
+            if resume_path is None:
+                model = self.add_lora_to_model(
+                    getattr(self.pipe, lora_base_model),
+                    target_modules=lora_target_modules.split(","),
+                    lora_rank=lora_rank
+                )
+            else: 
+                # TODO
+                model = self.add_lora_to_model(
+                    getattr(self.pipe, lora_base_model),
+                    target_modules=lora_target_modules.split(","),
+                    lora_rank=lora_rank
+                )
             setattr(self.pipe, lora_base_model, model)
             
         # Store other configs
