@@ -408,7 +408,6 @@ def launch_training_task(
                 loss = model(data)
                 accelerator.backward(loss)
                 optimizer.step()
-                model_logger.on_step_end(loss)
                 scheduler.step()
             if accelerator.is_main_process:
                 global_steps += 1
