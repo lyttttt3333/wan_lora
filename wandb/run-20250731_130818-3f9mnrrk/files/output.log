@@ -1,0 +1,9 @@
+VAE encoding: 100%|███████████████████████████████| 1/1 [00:02<00:00,  2.92s/it]
+100%|███████████████████████████████████████████| 50/50 [00:57<00:00,  1.15s/it]
+VAE decoding: 100%|███████████████████████████████| 1/1 [00:02<00:00,  2.57s/it]
+Traceback (most recent call last):
+  File "/home/lyt/DiffSynth-Studio/examples/wanvideo/model_training/validate_lora/Wan2.2-TI2V-5B.py", line 55, in <module>
+    main(args)
+  File "/home/lyt/DiffSynth-Studio/examples/wanvideo/model_training/validate_lora/Wan2.2-TI2V-5B.py", line 41, in main
+    wandb.log({f"video_{video_name}": wandb.Video(output_path, fps=15, format="mp4")})
+NameError: name 'output_path' is not defined

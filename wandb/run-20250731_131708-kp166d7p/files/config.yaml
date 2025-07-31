@@ -1,0 +1,102 @@
+_wandb:
+    value:
+        cli_version: 0.21.0
+        e:
+            rawgh1ylrgdsnlsg0qak3huqitx96kdw:
+                args:
+                    - --project
+                    - wan2.2_finetune
+                    - --data_csv
+                    - data/drones/meta.csv
+                    - --dataset_name
+                    - drones
+                    - --model_path
+                    - models/train/Wan2.2-TI2V-5B_lora/epoch-0-600.safetensors
+                    - --max_count
+                    - "10"
+                codePath: examples/wanvideo/model_training/validate_lora/Wan2.2-TI2V-5B.py
+                codePathLocal: examples/wanvideo/model_training/validate_lora/Wan2.2-TI2V-5B.py
+                cpu_count: 48
+                cpu_count_logical: 96
+                cudaVersion: "12.8"
+                disk:
+                    /:
+                        total: "2079114358784"
+                        used: "410827632640"
+                email: liyitong.thu@gmail.com
+                executable: /home/lyt/.conda/envs/lora/bin/python
+                git:
+                    commit: 4e67118af00ea136fad3d1c0d27fa123c6e84585
+                    remote: https://github.com/lyttttt3333/wan_lora.git
+                gpu: NVIDIA A100-SXM4-80GB
+                gpu_count: 8
+                gpu_nvidia:
+                    - architecture: Ampere
+                      cudaCores: 6912
+                      memoryTotal: "85899345920"
+                      name: NVIDIA A100-SXM4-80GB
+                      uuid: GPU-0bbdad4d-93ec-8830-546a-bf73fbcae7d2
+                    - architecture: Ampere
+                      cudaCores: 6912
+                      memoryTotal: "85899345920"
+                      name: NVIDIA A100-SXM4-80GB
+                      uuid: GPU-92949346-7781-c127-ac6b-43549e368df7
+                    - architecture: Ampere
+                      cudaCores: 6912
+                      memoryTotal: "85899345920"
+                      name: NVIDIA A100-SXM4-80GB
+                      uuid: GPU-93132461-f101-ebf3-b781-c6d85be41742
+                    - architecture: Ampere
+                      cudaCores: 6912
+                      memoryTotal: "85899345920"
+                      name: NVIDIA A100-SXM4-80GB
+                      uuid: GPU-fd7c7f2d-0750-a27e-dbb3-12be6f900d26
+                    - architecture: Ampere
+                      cudaCores: 6912
+                      memoryTotal: "85899345920"
+                      name: NVIDIA A100-SXM4-80GB
+                      uuid: GPU-6edbaae7-f45a-7c57-3b3c-35521eea5acc
+                    - architecture: Ampere
+                      cudaCores: 6912
+                      memoryTotal: "85899345920"
+                      name: NVIDIA A100-SXM4-80GB
+                      uuid: GPU-8147a8b2-40a4-ddc0-82b2-1ccefc9ec219
+                    - architecture: Ampere
+                      cudaCores: 6912
+                      memoryTotal: "85899345920"
+                      name: NVIDIA A100-SXM4-80GB
+                      uuid: GPU-a3607356-0613-9a8c-91ec-426f8818fa91
+                    - architecture: Ampere
+                      cudaCores: 6912
+                      memoryTotal: "85899345920"
+                      name: NVIDIA A100-SXM4-80GB
+                      uuid: GPU-91159a9a-093f-3000-06c7-a581a37a7e04
+                host: ip-172-31-41-175
+                memory:
+                    total: "1204521443328"
+                os: Linux-6.8.0-1028-aws-x86_64-with-glibc2.39
+                program: /home/lyt/DiffSynth-Studio/examples/wanvideo/model_training/validate_lora/Wan2.2-TI2V-5B.py
+                python: CPython 3.10.18
+                root: /home/lyt/DiffSynth-Studio
+                startedAt: "2025-07-31T13:17:08.791294Z"
+                writerId: rawgh1ylrgdsnlsg0qak3huqitx96kdw
+        m: []
+        python_version: 3.10.18
+        t:
+            "1":
+                - 1
+                - 11
+                - 41
+                - 49
+                - 71
+            "2":
+                - 1
+                - 11
+                - 41
+                - 49
+                - 71
+            "4": 3.10.18
+            "5": 0.21.0
+            "6": 4.54.1
+            "12": 0.21.0
+            "13": linux-x86_64

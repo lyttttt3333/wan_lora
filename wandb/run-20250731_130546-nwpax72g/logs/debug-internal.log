@@ -1,0 +1,12 @@
+{"time":"2025-07-31T13:05:46.82668728Z","level":"INFO","msg":"stream: starting","core version":"0.21.0"}
+{"time":"2025-07-31T13:05:48.628422375Z","level":"INFO","msg":"stream: created new stream","id":"nwpax72g"}
+{"time":"2025-07-31T13:05:48.628459045Z","level":"INFO","msg":"stream: started","id":"nwpax72g"}
+{"time":"2025-07-31T13:05:48.62846878Z","level":"INFO","msg":"writer: Do: started","stream_id":"nwpax72g"}
+{"time":"2025-07-31T13:05:48.628479946Z","level":"INFO","msg":"sender: started","stream_id":"nwpax72g"}
+{"time":"2025-07-31T13:05:48.62848791Z","level":"INFO","msg":"handler: started","stream_id":"nwpax72g"}
+{"time":"2025-07-31T13:05:49.085106865Z","level":"INFO","msg":"stream: closing","id":"nwpax72g"}
+{"time":"2025-07-31T13:05:50.076764395Z","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-31T13:05:50.218572087Z","level":"INFO","msg":"handler: closed","stream_id":"nwpax72g"}
+{"time":"2025-07-31T13:05:50.218593635Z","level":"INFO","msg":"writer: Close: closed","stream_id":"nwpax72g"}
+{"time":"2025-07-31T13:05:50.218622817Z","level":"INFO","msg":"sender: closed","stream_id":"nwpax72g"}
+{"time":"2025-07-31T13:05:50.218628416Z","level":"INFO","msg":"stream: closed","id":"nwpax72g"}
