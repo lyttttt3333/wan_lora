@@ -377,7 +377,7 @@ class ModelLogger:
     
     
     def on_epoch_end(self, accelerator, model, epoch_id, steps):
-        unwrapped_model = accelerator.unwrap_model(model).pipe.lora_base_model.model
+        unwrapped_model = accelerator.unwrap_model(model).pipe.dit
         print(unwrapped_model)
         path = os.path.join(self.output_path, f"epoch-{epoch_id}-{steps}")
         unwrapped_model.save_pretrained(path, save_function=accelerator.save)
