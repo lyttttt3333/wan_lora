@@ -62,6 +62,9 @@ class WanTrainingModule(DiffusionTrainingModule):
                 )
                 base_model = getattr(self.pipe, lora_base_model)
                 model = PeftModel.from_pretrained(base_model, resume_path)
+            for name, param in model.named_parameters():
+                if param.requires_grad:
+                    print("✅ Trainable:", name)
             setattr(self.pipe, lora_base_model, model)
             
         # Store other configs
