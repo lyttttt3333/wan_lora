@@ -40,19 +40,19 @@ class WanTrainingModule(DiffusionTrainingModule):
         # Add LoRA to the base models
         if lora_base_model is not None:
             if resume_path is None:
-                model = self.add_lora_to_model(
-                    getattr(self.pipe, lora_base_model),
-                    target_modules=lora_target_modules.split(","),
-                    lora_rank=lora_rank
-                )
-                # lora_config = LoraConfig(
-                #     r=lora_rank,
-                #     lora_alpha=lora_rank,
-                #     target_modules=lora_target_modules.split(","),  # 根据你模型命名来填
-                #     task_type="FEATURE_EXTRACTION"
+                # model = self.add_lora_to_model(
+                #     getattr(self.pipe, lora_base_model),
+                #     target_modules=lora_target_modules.split(","),
+                #     lora_rank=lora_rank
                 # )
-                # base_model = getattr(self.pipe, lora_base_model)
-                # model = get_peft_model(base_model, lora_config)
+                lora_config = LoraConfig(
+                    r=lora_rank,
+                    lora_alpha=lora_rank,
+                    target_modules=lora_target_modules.split(","),  # 根据你模型命名来填
+                    task_type="FEATURE_EXTRACTION"
+                )
+                base_model = getattr(self.pipe, lora_base_model)
+                model = get_peft_model(base_model, lora_config)
             else: 
                 lora_config = LoraConfig(
                     r=lora_rank,
