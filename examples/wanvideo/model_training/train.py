@@ -144,6 +144,7 @@ if __name__ == "__main__":
         remove_prefix_in_ckpt=args.remove_prefix_in_ckpt,
         use_wandb=True,
     )
+    print("Trainable modules:", model.trainable_modules())
     optimizer = torch.optim.AdamW(model.trainable_modules(), lr=args.learning_rate)
     scheduler = torch.optim.lr_scheduler.ConstantLR(optimizer)
     launch_training_task(
