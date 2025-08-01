@@ -420,7 +420,8 @@ def evaluate(pipe, accelerator, steps):
             num_frames=49,
             seed=1, tiled=True,
         )
-        output_path = f"output_videos/training-{steps}/{video_name}"
+        output_path = f"output_videos/training-{steps}/{rank}-in-{world_size}-{video_name}"
+        os.makedirs(f"output_videos/training-{steps}",exist_ok=True)
         save_video(video, output_path, fps=15, quality=5)
 
         wandb.log({f"{steps}/gen/video_{video_name}": wandb.Video(output_path, fps=15, format="mp4")})
