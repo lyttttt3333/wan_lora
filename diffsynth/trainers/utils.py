@@ -428,8 +428,8 @@ def launch_training_task(
                 print(f"wait 6: Process {accelerator.process_index}")
                 scheduler.step()
                 print(f"wait 7: Process {accelerator.process_index}")
-            if accelerator.is_main_process:
-                global_steps += 1
+            global_steps += 1
+            accelerator.wait_for_everyone()
                 # model_logger.on_step_end(accelerator, loss, global_steps)
             if global_steps % save_steps == 0:
                 model_logger.on_epoch_end(accelerator, model, epoch_id, global_steps)
