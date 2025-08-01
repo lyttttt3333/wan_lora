@@ -35,6 +35,7 @@ class WanVideoPipeline(BasePipeline):
             height_division_factor=16, width_division_factor=16, time_division_factor=4, time_division_remainder=1
         )
         self.scheduler = FlowMatchScheduler(shift=5, sigma_min=0.0, extra_one_step=True)
+        self.eval_scheduler = FlowMatchScheduler(shift=5, sigma_min=0.0, extra_one_step=True)
         self.prompter = WanPrompter(tokenizer_path=tokenizer_path)
         self.text_encoder: WanTextEncoder = None
         self.image_encoder: WanImageEncoder = None
@@ -405,7 +406,7 @@ class WanVideoPipeline(BasePipeline):
         progress_bar_cmd=tqdm,
     ):
         # Scheduler
-        self.scheduler.set_timesteps(num_inference_steps, denoising_strength=denoising_strength, shift=sigma_shift)
+        self.eval_scheduler.set_timesteps(num_inference_steps, denoising_strength=denoising_strength, shift=sigma_shift)
         
         # Inputs
         inputs_posi = {
@@ -437,9 +438,9 @@ class WanVideoPipeline(BasePipeline):
         # Denoise
         self.load_models_to_device(self.in_iteration_models)
         models = {name: getattr(self, name) for name in self.in_iteration_models}
-        for progress_id, timestep in enumerate(progress_bar_cmd(self.scheduler.timesteps)):
+        for progress_id, timestep in enumerate(progress_bar_cmd(self.eval_scheduler.timesteps)):
             # Switch DiT if necessary
-            if timestep.item() < switch_DiT_boundary * self.scheduler.num_train_timesteps and self.dit2 is not None and not models["dit"] is self.dit2:
+            if timestep.item() < switch_DiT_boundary * self.eval_scheduler.num_train_timesteps and self.dit2 is not None and not models["dit"] is self.dit2:
                 self.load_models_to_device(self.in_iteration_models_2)
                 models["dit"] = self.dit2
                 
@@ -458,7 +459,7 @@ class WanVideoPipeline(BasePipeline):
                 noise_pred = noise_pred_posi
 
             # Scheduler
-            inputs_shared["latents"] = self.scheduler.step(noise_pred, self.scheduler.timesteps[progress_id], inputs_shared["latents"])
+            inputs_shared["latents"] = self.eval_scheduler.step(noise_pred, self.eval_scheduler.timesteps[progress_id], inputs_shared["latents"])
             if "first_frame_latents" in inputs_shared:
                 inputs_shared["latents"][:, :, 0:1] = inputs_shared["first_frame_latents"]
         
