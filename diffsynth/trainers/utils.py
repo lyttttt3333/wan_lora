@@ -451,8 +451,8 @@ def evaluate(pipe, accelerator, steps):
                         all_video_infos.append((video_name, input_path, output_path))
 
         for video_name, input_path, output_path in all_video_infos:
-            wandb.log({f"training_{steps}/gen/video_{video_name}": wandb.Video(output_path, fps=15, format="mp4")})
-            wandb.log({f"training_{steps}/src/video_{video_name}": wandb.Video(input_path, fps=15, format="mp4")})
+            wandb.log({f"gen/video_{video_name}": wandb.Video(output_path, fps=15, format="mp4")},step=steps)
+            wandb.log({f"src/video_{video_name}": wandb.Video(input_path, fps=15, format="mp4")},step=steps)
 
 
 
