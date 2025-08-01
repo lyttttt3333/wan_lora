@@ -415,12 +415,19 @@ def launch_training_task(
     global_steps = 0
     for epoch_id in range(num_epochs):
         for data in tqdm(dataloader):
+            print(f"wait 1: Process {accelerator.process_index}")
             with accelerator.accumulate(model):
+                print(f"wait 2: Process {accelerator.process_index}")
                 optimizer.zero_grad()
+                print(f"wait 3: Process {accelerator.process_index}")
                 loss = model(data)
+                print(f"wait 4: Process {accelerator.process_index}")
                 accelerator.backward(loss)
+                print(f"wait 5: Process {accelerator.process_index}")
                 optimizer.step()
+                print(f"wait 6: Process {accelerator.process_index}")
                 scheduler.step()
+                print(f"wait 7: Process {accelerator.process_index}")
             if accelerator.is_main_process:
                 global_steps += 1
                 # model_logger.on_step_end(accelerator, loss, global_steps)
