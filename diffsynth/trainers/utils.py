@@ -410,6 +410,7 @@ def evaluate(pipe, accelerator, steps):
     df = df.iloc[rank::world_size].reset_index(drop=True)
 
     count = 0
+    local_video_infos = []
     for video_name, prompt in zip(df["video"], df["prompt"]):
         input_path = f"data/{DATASET_NAME}/{video_name}"
         input_image = VideoData(input_path, height=480, width=832)[0]
@@ -424,13 +425,22 @@ def evaluate(pipe, accelerator, steps):
         os.makedirs(f"output_videos/training-{steps}",exist_ok=True)
         save_video(video, output_path, fps=15, quality=5)
 
-        wandb.log({f"{steps}/gen/video_{video_name}": wandb.Video(output_path, fps=15, format="mp4")})
-        wandb.log({f"{steps}/src/video_{video_name}": wandb.Video(input_path, fps=15, format="mp4")})
+        local_video_infos.append((video_name, input_path, output_path))
+
+        # wandb.log({f"{steps}/gen/video_{video_name}": wandb.Video(output_path, fps=15, format="mp4")})
+        # wandb.log({f"{steps}/src/video_{video_name}": wandb.Video(input_path, fps=15, format="mp4")})
 
         count += 1
         if count >= MAX_COUNT:
             break
 
+    all_video_infos = accelerator.gather_object(local_video_infos)
+    
+    if accelerator.is_main_process:
+    
+        for video_name, input_path, output_path in all_video_infos:
+            wandb.log({f"{steps}/gen/video_{video_name}": wandb.Video(output_path, fps=15, format="mp4")})
+            wandb.log({f"{steps}/src/video_{video_name}": wandb.Video(input_path, fps=15, format="mp4")})
 
 
 
