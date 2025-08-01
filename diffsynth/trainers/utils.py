@@ -377,6 +377,7 @@ class ModelLogger:
     
     
     def on_epoch_end(self, accelerator, model, epoch_id, steps, use_lora):
+        print(use_lora)
         if use_lora:
             unwrapped_model = accelerator.unwrap_model(model).pipe.dit
             path = os.path.join(self.output_path, f"epoch-{epoch_id}-{steps}")
