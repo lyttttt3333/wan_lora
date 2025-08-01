@@ -290,7 +290,7 @@ class WanVideoPipeline(BasePipeline):
         device: Union[str, torch.device] = "cuda",
         model_configs: list[ModelConfig] = [],
         tokenizer_config: ModelConfig = ModelConfig(model_id="Wan-AI/Wan2.1-T2V-1.3B", origin_file_pattern="google/*"),
-        redirect_common_files: bool = True,
+        redirect_common_files: bool = False,
         use_usp=False,
     ):
         # Redirect model path
