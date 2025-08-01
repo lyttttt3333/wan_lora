@@ -399,7 +399,7 @@ class ModelLogger:
 @torch.no_grad()
 def evaluate(pipe, accelerator, steps):
     DATA_CSV = "data/drones/meta.csv"
-    MAX_COUNT = 1
+    MAX_COUNT = 3
     DATASET_NAME = "drones"
     
     df = pd.read_csv(DATA_CSV)
@@ -470,7 +470,7 @@ def launch_training_task(
     dataloader = torch.utils.data.DataLoader(dataset, shuffle=True, collate_fn=lambda x: x[0])
     accelerator = Accelerator(gradient_accumulation_steps=gradient_accumulation_steps)
     model, optimizer, dataloader, scheduler = accelerator.prepare(model, optimizer, dataloader, scheduler)
-    save_steps = 6
+    save_steps = 300
     global_steps = 0
     for epoch_id in range(num_epochs):
         for data in tqdm(dataloader):
