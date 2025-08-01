@@ -377,13 +377,17 @@ class ModelLogger:
     
     
     def on_epoch_end(self, accelerator, model, epoch_id, steps):
+        print(steps)
+        print("wait1")
         accelerator.wait_for_everyone()
+        print("wait2")
         if accelerator.is_main_process:
             state_dict = accelerator.get_state_dict(model)
             state_dict = accelerator.unwrap_model(model).export_trainable_state_dict(state_dict, remove_prefix=self.remove_prefix_in_ckpt)
             state_dict = self.state_dict_converter(state_dict)
             os.makedirs(self.output_path, exist_ok=True)
             path = os.path.join(self.output_path, f"epoch-{epoch_id}-{steps}.safetensors")
+            print("wait3")
             accelerator.save(state_dict, path, safe_serialization=True)
             # checkpoint = {
             #     'epoch': epoch_id,
