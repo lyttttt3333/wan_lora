@@ -156,4 +156,5 @@ if __name__ == "__main__":
         dataset, model, model_logger, optimizer, scheduler,
         num_epochs=args.num_epochs,
         gradient_accumulation_steps=args.gradient_accumulation_steps,
+        use_lora=args.lora,
     )
