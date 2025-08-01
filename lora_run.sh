@@ -1,3 +1,4 @@
+export CUDA_VISIBLE_DEVICES=0,1,2,3
 export WANDB_API_KEY="5409d3b960b01b25cec0f6abb5361b4022f0cc41"
 
 accelerate launch examples/wanvideo/model_training/train.py \
@@ -16,4 +17,4 @@ accelerate launch examples/wanvideo/model_training/train.py \
   --lora_target_modules "q,k,v,o,ffn.0,ffn.2" \
   --lora_rank 32 \
   --extra_inputs "input_image" \
-  # --resume_path "models/train/Wan2.2-TI2V-5B_lora/epoch-0-600.safetensors"
+  --resume_path "models/train/Wan2.2-TI2V-5B_lora/epoch-0-6"
