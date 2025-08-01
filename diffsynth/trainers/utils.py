@@ -399,7 +399,7 @@ class ModelLogger:
 @torch.no_grad()
 def evaluate(pipe, accelerator, steps):
     DATA_CSV = "data/drones/meta.csv"
-    MAX_COUNT = 3
+    MAX_COUNT = 1
     DATASET_NAME = "drones"
     
     df = pd.read_csv(DATA_CSV)
