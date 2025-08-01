@@ -370,9 +370,9 @@ class ModelLogger:
             wandb.init(project="wan2.2_finetune") 
             self.wandb_initialized = True
 
-    def on_step_end(self, accelerator, loss, global_step):
+    def on_step_end(self, accelerator, loss, global_steps):
         self.init_wandb(accelerator)
-        wandb.log({"train/loss": loss.item()}, step=global_step)
+        wandb.log({"train/loss": loss.item()}, step=global_steps)
 
     
     
@@ -460,7 +460,7 @@ def launch_training_task(
             global_steps += 1
             reduced_loss = accelerator.reduce(loss, reduction="mean")
             if accelerator.is_main_process:
-                model_logger.on_step_end(reduced_loss, global_steps)
+                model_logger.on_step_end(accelerator, reduced_loss, global_steps)
             accelerator.wait_for_everyone()
             if global_steps % save_steps == 0:
                 if accelerator.is_main_process:
