@@ -377,8 +377,7 @@ class ModelLogger:
     
     
     def on_epoch_end(self, accelerator, model, epoch_id, steps):
-        print(steps)
-        print("wait1")
+        print(f"Before wait: Process {accelerator.process_index}")
         accelerator.wait_for_everyone()
         print("wait2")
         if accelerator.is_main_process:
