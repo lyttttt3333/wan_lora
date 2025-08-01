@@ -15,4 +15,4 @@ accelerate launch examples/wanvideo/model_training/train.py \
   --output_path "./models/train/Wan2.2-TI2V-5B_full" \
   --trainable_models "dit" \
   --extra_inputs "input_image" \
-  --lora False
+  --disable_lora
