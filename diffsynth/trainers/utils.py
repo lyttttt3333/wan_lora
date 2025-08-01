@@ -376,17 +376,18 @@ class ModelLogger:
 
     
     
-    def on_epoch_end(self, accelerator, model, epoch_id, steps):
-        unwrapped_model = accelerator.unwrap_model(model).pipe.dit
-        path = os.path.join(self.output_path, f"epoch-{epoch_id}-{steps}")
-        unwrapped_model.save_pretrained(path, save_function=accelerator.save)
-        # state_dict = accelerator.get_state_dict(model)
-        # state_dict = accelerator.unwrap_model(model).export_trainable_state_dict(state_dict, remove_prefix=self.remove_prefix_in_ckpt)
-        # state_dict = self.state_dict_converter(state_dict)
-        # os.makedirs(self.output_path, exist_ok=True)
-        # path = os.path.join(self.output_path, f"epoch-{epoch_id}-{steps}.safetensors")
-        # print("wait3")
-        # accelerator.save(state_dict, path, safe_serialization=True)
+    def on_epoch_end(self, accelerator, model, epoch_id, steps, use_lora):
+        if use_lora:
+            unwrapped_model = accelerator.unwrap_model(model).pipe.dit
+            path = os.path.join(self.output_path, f"epoch-{epoch_id}-{steps}")
+            unwrapped_model.save_pretrained(path, save_function=accelerator.save)
+        else:
+            state_dict = accelerator.get_state_dict(model)
+            state_dict = accelerator.unwrap_model(model).export_trainable_state_dict(state_dict, remove_prefix=self.remove_prefix_in_ckpt)
+            state_dict = self.state_dict_converter(state_dict)
+            os.makedirs(self.output_path, exist_ok=True)
+            path = os.path.join(self.output_path, f"epoch-{epoch_id}-{steps}.safetensors")
+            accelerator.save(state_dict, path, safe_serialization=True)
             # checkpoint = {
             #     'epoch': epoch_id,
             #     'step': steps,
@@ -465,6 +466,7 @@ def launch_training_task(
     scheduler: torch.optim.lr_scheduler.LRScheduler,
     num_epochs: int = 1,
     gradient_accumulation_steps: int = 1,
+    use_lora=True,
     args = None
 ):
     dataloader = torch.utils.data.DataLoader(dataset, shuffle=True, collate_fn=lambda x: x[0])
@@ -487,7 +489,7 @@ def launch_training_task(
             accelerator.wait_for_everyone()
             if global_steps % save_steps == 0:
                 if accelerator.is_main_process:
-                    model_logger.on_epoch_end(accelerator, model, epoch_id, global_steps)
+                    model_logger.on_epoch_end(accelerator, model, epoch_id, global_steps, use_lora)
             else:
                 pass
             accelerator.wait_for_everyone()
