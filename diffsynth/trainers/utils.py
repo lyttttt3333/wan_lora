@@ -1,5 +1,6 @@
 import imageio, os, torch, warnings, torchvision, argparse, json
 from peft import LoraConfig, inject_adapter_in_model
+from diffsynth import save_video, VideoData
 from PIL import Image
 import pandas as pd
 from tqdm import tqdm
@@ -365,20 +366,18 @@ class ModelLogger:
         self.wandb_initialized = False
 
     def init_wandb(self, accelerator):
-        if accelerator.is_main_process and not self.wandb_initialized:
-            wandb.init(project="wan2.2_finetune")  # 可加其他参数如 name=run_name, config=config
+        if not self.wandb_initialized:
+            wandb.init(project="wan2.2_finetune") 
             self.wandb_initialized = True
 
     def on_step_end(self, accelerator, loss, global_step):
-        if accelerator.is_main_process:
-            self.init_wandb(accelerator)
-            wandb.log({"train/loss": loss.item()}, step=global_step)
+        self.init_wandb(accelerator)
+        wandb.log({"train/loss": loss.item()}, step=global_step)
 
     
     
     def on_epoch_end(self, accelerator, model, epoch_id, steps):
         unwrapped_model = accelerator.unwrap_model(model).pipe.dit
-        print(unwrapped_model)
         path = os.path.join(self.output_path, f"epoch-{epoch_id}-{steps}")
         unwrapped_model.save_pretrained(path, save_function=accelerator.save)
         # state_dict = accelerator.get_state_dict(model)
@@ -397,6 +396,29 @@ class ModelLogger:
             # }
             # torch.save(checkpoint, path)
 
+@torch.no_grad()
+def evaluate(model, args):
+    df = pd.read_csv(args.data_csv) 
+    count = 0
+    for video_name, prompt in zip(df["video"], df["prompt"]):
+        count += 1
+        input_path = f"data/{args.dataset_name}/{video_name}"
+        input_image = VideoData(input_path, height=480, width=832)[0]
+        video = model.pipe(
+            prompt=prompt,
+            negative_prompt="色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走",
+            input_image=input_image,
+            num_frames=49,
+            seed=1, tiled=True,
+        )
+        output_path = f"output_videos/{video_name}"
+        save_video(video, output_path, fps=15, quality=5)
+        if args.upload_wandb:
+            wandb.log({f"gen/video_{video_name}": wandb.Video(output_path, fps=15, format="mp4")})
+            wandb.log({f"src/video_{video_name}": wandb.Video(input_path, fps=15, format="mp4")})
+        if count >= args.max_count:
+            break
+
 
 
 def launch_training_task(
@@ -407,6 +429,7 @@ def launch_training_task(
     scheduler: torch.optim.lr_scheduler.LRScheduler,
     num_epochs: int = 1,
     gradient_accumulation_steps: int = 1,
+    args = None
 ):
     dataloader = torch.utils.data.DataLoader(dataset, shuffle=True, collate_fn=lambda x: x[0])
     accelerator = Accelerator(gradient_accumulation_steps=gradient_accumulation_steps)
@@ -415,27 +438,25 @@ def launch_training_task(
     global_steps = 0
     for epoch_id in range(num_epochs):
         for data in tqdm(dataloader):
-            print(f"wait 1: Process {accelerator.process_index}")
             with accelerator.accumulate(model):
-                print(f"wait 2: Process {accelerator.process_index}")
                 optimizer.zero_grad()
-                print(f"wait 3: Process {accelerator.process_index}")
                 loss = model(data)
-                print(f"wait 4: Process {accelerator.process_index}")
                 accelerator.backward(loss)
-                print(f"wait 5: Process {accelerator.process_index}")
                 optimizer.step()
-                print(f"wait 6: Process {accelerator.process_index}")
                 scheduler.step()
-                print(f"wait 7: Process {accelerator.process_index}")
-            accelerator.wait_for_everyone()
+            global_steps += 1
+            reduced_loss = accelerator.reduce(loss, reduction="mean")
             if accelerator.is_main_process:
-                global_steps += 1
-                # model_logger.on_step_end(accelerator, loss, global_steps)
-                if global_steps % save_steps == 0:
+                model_logger.on_step_end(reduced_loss, global_steps)
+            accelerator.wait_for_everyone()
+            if global_steps % save_steps == 0:
+                if accelerator.is_main_process:
                     model_logger.on_epoch_end(accelerator, model, epoch_id, global_steps)
             else:
                 pass
+            accelerator.wait_for_everyone()
+            if global_steps % save_steps == 0:
+                evaluate(args)
             accelerator.wait_for_everyone()
                 
                     
