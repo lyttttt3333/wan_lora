@@ -1,0 +1,121 @@
+{
+  "os":  "Linux-6.8.0-1028-aws-x86_64-with-glibc2.39",
+  "python":  "CPython 3.10.18",
+  "startedAt":  "2025-07-31T16:02:41.877004Z",
+  "args":  [
+    "--dataset_base_path",
+    "data/drones",
+    "--dataset_metadata_path",
+    "data/drones/meta.csv",
+    "--height",
+    "480",
+    "--width",
+    "832",
+    "--num_frames",
+    "49",
+    "--dataset_repeat",
+    "100",
+    "--model_id_with_origin_paths",
+    "Wan-AI/Wan2.2-TI2V-5B:diffusion_pytorch_model*.safetensors,Wan-AI/Wan2.2-TI2V-5B:models_t5_umt5-xxl-enc-bf16.pth,Wan-AI/Wan2.2-TI2V-5B:Wan2.2_VAE.pth",
+    "--learning_rate",
+    "1e-4",
+    "--num_epochs",
+    "5",
+    "--remove_prefix_in_ckpt",
+    "pipe.dit.",
+    "--output_path",
+    "./models/train/Wan2.2-TI2V-5B_lora",
+    "--lora_base_model",
+    "dit",
+    "--lora_target_modules",
+    "q,k,v,o,ffn.0,ffn.2",
+    "--lora_rank",
+    "32",
+    "--extra_inputs",
+    "input_image"
+  ],
+  "program":  "/home/lyt/DiffSynth-Studio/examples/wanvideo/model_training/train.py",
+  "codePath":  "examples/wanvideo/model_training/train.py",
+  "codePathLocal":  "examples/wanvideo/model_training/train.py",
+  "git":  {
+    "remote":  "https://github.com/lyttttt3333/wan_lora.git",
+    "commit":  "477b7660d121d91d681a7db93b379540c734bda8"
+  },
+  "email":  "liyitong.thu@gmail.com",
+  "root":  "/home/lyt/DiffSynth-Studio",
+  "host":  "ip-172-31-41-175",
+  "executable":  "/home/lyt/.conda/envs/lora/bin/python3.10",
+  "cpu_count":  48,
+  "cpu_count_logical":  96,
+  "gpu":  "NVIDIA A100-SXM4-80GB",
+  "gpu_count":  8,
+  "disk":  {
+    "/":  {
+      "total":  "2079114358784",
+      "used":  "410899714048"
+    }
+  },
+  "memory":  {
+    "total":  "1204521443328"
+  },
+  "gpu_nvidia":  [
+    {
+      "name":  "NVIDIA A100-SXM4-80GB",
+      "memoryTotal":  "85899345920",
+      "cudaCores":  6912,
+      "architecture":  "Ampere",
+      "uuid":  "GPU-0bbdad4d-93ec-8830-546a-bf73fbcae7d2"
+    },
+    {
+      "name":  "NVIDIA A100-SXM4-80GB",
+      "memoryTotal":  "85899345920",
+      "cudaCores":  6912,
+      "architecture":  "Ampere",
+      "uuid":  "GPU-92949346-7781-c127-ac6b-43549e368df7"
+    },
+    {
+      "name":  "NVIDIA A100-SXM4-80GB",
+      "memoryTotal":  "85899345920",
+      "cudaCores":  6912,
+      "architecture":  "Ampere",
+      "uuid":  "GPU-93132461-f101-ebf3-b781-c6d85be41742"
+    },
+    {
+      "name":  "NVIDIA A100-SXM4-80GB",
+      "memoryTotal":  "85899345920",
+      "cudaCores":  6912,
+      "architecture":  "Ampere",
+      "uuid":  "GPU-fd7c7f2d-0750-a27e-dbb3-12be6f900d26"
+    },
+    {
+      "name":  "NVIDIA A100-SXM4-80GB",
+      "memoryTotal":  "85899345920",
+      "cudaCores":  6912,
+      "architecture":  "Ampere",
+      "uuid":  "GPU-6edbaae7-f45a-7c57-3b3c-35521eea5acc"
+    },
+    {
+      "name":  "NVIDIA A100-SXM4-80GB",
+      "memoryTotal":  "85899345920",
+      "cudaCores":  6912,
+      "architecture":  "Ampere",
+      "uuid":  "GPU-8147a8b2-40a4-ddc0-82b2-1ccefc9ec219"
+    },
+    {
+      "name":  "NVIDIA A100-SXM4-80GB",
+      "memoryTotal":  "85899345920",
+      "cudaCores":  6912,
+      "architecture":  "Ampere",
+      "uuid":  "GPU-a3607356-0613-9a8c-91ec-426f8818fa91"
+    },
+    {
+      "name":  "NVIDIA A100-SXM4-80GB",
+      "memoryTotal":  "85899345920",
+      "cudaCores":  6912,
+      "architecture":  "Ampere",
+      "uuid":  "GPU-91159a9a-093f-3000-06c7-a581a37a7e04"
+    }
+  ],
+  "cudaVersion":  "12.8",
+  "writerId":  "qqr72n44vxt8namoquvruzf5jm6o2gcb"
+}
