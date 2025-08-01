@@ -482,7 +482,6 @@ def launch_training_task(
                 accelerator.backward(loss)
                 optimizer.step()
                 scheduler.step()
-            global_steps += 1
             reduced_loss = accelerator.reduce(loss, reduction="mean")
             if accelerator.is_main_process:
                 model_logger.on_step_end(accelerator, reduced_loss, global_steps)
@@ -497,6 +496,7 @@ def launch_training_task(
                 pipeline = accelerator.unwrap_model(model).pipe
                 evaluate(pipeline, accelerator, global_steps)
             accelerator.wait_for_everyone()
+            global_steps += 1
                 
                     
 
