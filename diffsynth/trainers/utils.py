@@ -397,27 +397,40 @@ class ModelLogger:
             # torch.save(checkpoint, path)
 
 @torch.no_grad()
-def evaluate(model, args):
-    df = pd.read_csv(args.data_csv) 
+def evaluate(pipe, accelerator, steps):
+    DATA_CSV = "data/drones/meta.csv"
+    MAX_COUNT = 3
+    DATASET_NAME = "drones"
+    
+    df = pd.read_csv(DATA_CSV)
+    rank = accelerator.local_process_index
+    world_size = accelerator.num_processes
+
+    # 按rank切分数据
+    df = df.iloc[rank::world_size].reset_index(drop=True)
+
     count = 0
     for video_name, prompt in zip(df["video"], df["prompt"]):
-        count += 1
-        input_path = f"data/{args.dataset_name}/{video_name}"
+        input_path = f"data/{DATASET_NAME}/{video_name}"
         input_image = VideoData(input_path, height=480, width=832)[0]
-        video = model.pipe(
+        video = pipe(
             prompt=prompt,
             negative_prompt="色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走",
             input_image=input_image,
             num_frames=49,
             seed=1, tiled=True,
         )
-        output_path = f"output_videos/{video_name}"
+        output_path = f"output_videos/training-{steps}/{video_name}"
         save_video(video, output_path, fps=15, quality=5)
-        if args.upload_wandb:
-            wandb.log({f"gen/video_{video_name}": wandb.Video(output_path, fps=15, format="mp4")})
-            wandb.log({f"src/video_{video_name}": wandb.Video(input_path, fps=15, format="mp4")})
-        if count >= args.max_count:
+
+        wandb.log({f"{steps}/gen/video_{video_name}": wandb.Video(output_path, fps=15, format="mp4")})
+        wandb.log({f"{steps}/src/video_{video_name}": wandb.Video(input_path, fps=15, format="mp4")})
+
+        count += 1
+        if count >= MAX_COUNT:
             break
+
+
 
 
 
