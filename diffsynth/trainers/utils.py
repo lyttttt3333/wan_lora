@@ -469,7 +469,8 @@ def launch_training_task(
                 pass
             accelerator.wait_for_everyone()
             if global_steps % save_steps == 0:
-                evaluate(args)
+                pipeline = accelerator.unwrap_model(model).pipe
+                evaluate(pipeline, accelerator, global_steps)
             accelerator.wait_for_everyone()
                 
                     
