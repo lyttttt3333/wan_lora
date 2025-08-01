@@ -61,8 +61,9 @@ class WanTrainingModule(DiffusionTrainingModule):
                     task_type="FEATURE_EXTRACTION"
                 )
                 base_model = getattr(self.pipe, lora_base_model)
-                base_model = get_peft_model(base_model, lora_config)
+                # base_model = get_peft_model(base_model, lora_config)
                 model = PeftModel.from_pretrained(base_model, resume_path)
+            print(type(model))
             for name, param in model.named_parameters():
                 if param.requires_grad:
                     print("✅ Trainable:", name)
