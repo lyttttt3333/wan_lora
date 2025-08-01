@@ -411,36 +411,48 @@ def evaluate(pipe, accelerator, steps):
 
     count = 0
     local_video_infos = []
-    for video_name, prompt in zip(df["video"], df["prompt"]):
-        input_path = f"data/{DATASET_NAME}/{video_name}"
-        input_image = VideoData(input_path, height=480, width=832)[0]
-        video = pipe(
-            prompt=prompt,
-            negative_prompt="色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走",
-            input_image=input_image,
-            num_frames=49,
-            seed=1, tiled=True,
-        )
-        output_path = f"output_videos/training-{steps}/{rank}-in-{world_size}-{video_name}"
-        os.makedirs(f"output_videos/training-{steps}",exist_ok=True)
-        save_video(video, output_path, fps=15, quality=5)
 
-        local_video_infos.append((video_name, input_path, output_path))
+    output_dir = f"output_videos/training-{steps}"
+    os.makedirs(output_dir, exist_ok=True)
 
-        # wandb.log({f"{steps}/gen/video_{video_name}": wandb.Video(output_path, fps=15, format="mp4")})
-        # wandb.log({f"{steps}/src/video_{video_name}": wandb.Video(input_path, fps=15, format="mp4")})
+    txt_path = os.path.join(output_dir, f"video_info_rank-{rank}.txt")
+    with open(txt_path, "w") as f:
+        for video_name, prompt in zip(df["video"], df["prompt"]):
+            input_path = f"data/{DATASET_NAME}/{video_name}"
+            input_image = VideoData(input_path, height=480, width=832)[0]
+            video = pipe(
+                prompt=prompt,
+                negative_prompt="色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走",
+                input_image=input_image,
+                num_frames=49,
+                seed=1, tiled=True,
+            )
+            output_path = os.path.join(output_dir, f"{rank}-in-{world_size}-{video_name}")
 
-        count += 1
-        if count >= MAX_COUNT:
+            f.write(f"{video_name},{input_path},{output_path}\n")
+            save_video(video, output_path, fps=15, quality=5)
+    
+            local_video_infos.append((video_name, input_path, output_path))
+    
+            count += 1
+            if count >= MAX_COUNT:
             break
 
-    all_video_infos = accelerator.gather_object(local_video_infos)
+    accelerator.wait_for_everyone()
     
     if accelerator.is_main_process:
-    
+        all_video_infos = []
+        for r in range(world_size):
+            rank_txt = os.path.join(output_dir, f"video_info_rank-{r}.txt")
+            if os.path.exists(rank_txt):
+                with open(rank_txt, "r") as f:
+                    for line in f:
+                        video_name, input_path, output_path = line.strip().split(",", 2)
+                        all_video_infos.append((video_name, input_path, output_path))
+
         for video_name, input_path, output_path in all_video_infos:
-            wandb.log({f"{steps}/gen/video_{video_name}": wandb.Video(output_path, fps=15, format="mp4")})
-            wandb.log({f"{steps}/src/video_{video_name}": wandb.Video(input_path, fps=15, format="mp4")})
+            wandb.log({f"training_{steps}/gen/video_{video_name}": wandb.Video(output_path, fps=15, format="mp4")})
+            wandb.log({f"training_{steps}/src/video_{video_name}": wandb.Video(input_path, fps=15, format="mp4")})
 
 
 
