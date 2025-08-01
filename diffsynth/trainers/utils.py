@@ -377,17 +377,13 @@ class ModelLogger:
     
     
     def on_epoch_end(self, accelerator, model, epoch_id, steps):
-        print(f"Before wait: Process {accelerator.process_index}")
-        accelerator.wait_for_everyone()
-        print("wait2")
-        if accelerator.is_main_process:
-            state_dict = accelerator.get_state_dict(model)
-            state_dict = accelerator.unwrap_model(model).export_trainable_state_dict(state_dict, remove_prefix=self.remove_prefix_in_ckpt)
-            state_dict = self.state_dict_converter(state_dict)
-            os.makedirs(self.output_path, exist_ok=True)
-            path = os.path.join(self.output_path, f"epoch-{epoch_id}-{steps}.safetensors")
-            print("wait3")
-            accelerator.save(state_dict, path, safe_serialization=True)
+        state_dict = accelerator.get_state_dict(model)
+        state_dict = accelerator.unwrap_model(model).export_trainable_state_dict(state_dict, remove_prefix=self.remove_prefix_in_ckpt)
+        state_dict = self.state_dict_converter(state_dict)
+        os.makedirs(self.output_path, exist_ok=True)
+        path = os.path.join(self.output_path, f"epoch-{epoch_id}-{steps}.safetensors")
+        print("wait3")
+        accelerator.save(state_dict, path, safe_serialization=True)
             # checkpoint = {
             #     'epoch': epoch_id,
             #     'step': steps,
@@ -428,11 +424,17 @@ def launch_training_task(
                 print(f"wait 6: Process {accelerator.process_index}")
                 scheduler.step()
                 print(f"wait 7: Process {accelerator.process_index}")
-            global_steps += 1
             accelerator.wait_for_everyone()
+            if accelerator.is_main_process:
+                global_steps += 1
                 # model_logger.on_step_end(accelerator, loss, global_steps)
-            if global_steps % save_steps == 0:
-                model_logger.on_epoch_end(accelerator, model, epoch_id, global_steps)
+                if global_steps % save_steps == 0:
+                    model_logger.on_epoch_end(accelerator, model, epoch_id, global_steps)
+            else:
+                pass
+            accelerator.wait_for_everyone()
+                
+                    
 
 
 
